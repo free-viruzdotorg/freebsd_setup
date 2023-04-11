@@ -1,0 +1,104 @@
+!#/bin/bash
+
+#resource - https://www.2daygeek.com/install-xfce-mate-kde-gnome-cinnamon-desktop-environment-on-freebsd/
+
+#resource - https://docs.freebsd.org/en/books/handbook/x11/#x11-wm
+
+################################################################
+
+
+#installing freebsd main rig
+
+#updating freebsd
+
+freebsd-update fetch
+freebsd-update install
+
+
+#installing amd drivers
+
+pkg install drm-kmod
+#configure below file
+#/usr/local/etc/X11/xorg.conf.d/20-radeon.conf
+#Section "Device"
+#	Identifier "Card0"
+#	Driver     "radeon"
+#EndSection
+######################################
+
+#Configure monitors
+#/usr/local/etc/X11/xorg.conf.d/10-monitor.conf
+
+#Section "Screen"
+#	Identifier "Screen0"
+#	Device     "Card0"
+#	SubSection "Display"
+#	Modes      "1024x768"
+#	EndSubSection
+#EndSection
+
+
+
+#installing sudoers using ports
+#must allow new user into the sudoer group
+#modify the sudoer file using visudo as root
+
+
+cd /usr/ports/security/sudo/ && make install clean
+
+
+#installing text editors
+
+pkg install nano
+pkg install vim
+
+#installing pre reqs for DE
+
+pkg install xorg
+pw groupmod video -m sdick || pw groupmod wheel -m sdick
+pkg install drm-kmod
+pkg install slim
+
+#add to /etc/fstab
+# vim /etc/fstab
+#proc           /proc       procfs  rw  0   0
+
+#display manager info
+## nano /etc/rc.conf
+#gdm_enable="YES"      [For GNOME, Cinnamon]
+#kdm4_enable="YES"     [For KDE]
+#slim_enable="YES"     [For XFCE, MATE]
+
+#edit vi /boot/loader.conf
+#add the line below
+#kern.vty=vt
+
+#edit the rc config
+#vim /etc/rc.conf
+
+
+
+
+#installing xfce desktop environment
+#docs - https://people.freebsd.org/~olivierd/xfce-faq.html
+
+pkg install xfce
+cd /usr/ports/x11-wm/xfce4
+make instll clean
+cp /usr/local/etc/xdg/xfce4/xinitrc ~/.xinitrc
+
+
+#https://www.linuxhelp.com/how-to-install-xfce-desktop-in-freebsd
+
+
+#installing mate
+#pkg install mate
+
+#installing gnome
+#pkg install gnome3
+
+#installing cinnamon
+#pkg install cinnamon
+
+#installing kde
+#pkg install kde
